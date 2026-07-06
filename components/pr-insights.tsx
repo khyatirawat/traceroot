@@ -1,0 +1,9 @@
+"use client";
+import type { PRRiskAssessment } from "@/lib/analytics";
+import { Panel, SectionHeader, Pill, ExternalLink } from "@/components/ui";
+import { num } from "@/lib/formatters";
+const RT = { high: "alert", medium: "warn", low: "ok" } as const;
+const RC = { high: "#c94040", medium: "#b8730a", low: "#2d8659" };
+export function PRInsights({ prs }: { prs: PRRiskAssessment[] }) {
+  return (<div className="space-y-4"><Panel><SectionHeader title="PR Risk Summary" sub={`${prs.length} PRs analyzed.`} /><div className="grid grid-cols-3 gap-3 px-5 py-4">{(["high","medium","low"] as const).map((l)=>{const c=prs.filter((p)=>p.riskLevel===l).length;return(<div key={l} className="rounded-lg border border-border bg-bg-elevated px-3 py-2.5"><p className="text-[10px] uppercase tracking-wider text-text-dim">{l} risk</p><p className="text-2xl font-semibold" style={{color:RC[l]}}>{c}</p></div>);})}</div></Panel><Panel><SectionHeader title="Pull Request Risk Analysis" /><ul className="divide-y divide-border">{prs.map((p)=>(<li key={p.number} className="px-5 py-3 text-sm"><div className="flex items-start gap-3"><Pill tone={RT[p.riskLevel]}>{p.riskLevel}</Pill><div className="min-w-0 flex-1"><ExternalLink href={p.htmlUrl}>#{p.number} {p.title}</ExternalLink><p className="text-[11px] text-text-dim">{p.authorLogin??"ghost"} · {p.summary}</p>{p.riskFlags.length>0 && <div className="mt-1 flex flex-wrap gap-1">{p.riskFlags.map((f,i)=><Pill key={i} tone="muted">{f}</Pill>)}</div>}{p.missingTests && <p className="mt-1 text-[11px] text-warn">⚠ No tests detected</p>}{p.edgeCaseRisk && <p className="mt-1 text-[11px] text-warn">⚠ Edge case risk</p>}</div><div className="text-right text-[11px] text-text-dim"><p>+{num(p.additions)}/-{num(p.deletions)}</p><p>{p.changedFiles} file{p.changedFiles===1?"":"s"}</p></div></div></li>))}{prs.length===0 && <li className="px-5 py-4 text-xs text-text-muted">No PRs.</li>}</ul></Panel></div>);
+}

@@ -1,0 +1,14 @@
+services:
+  traceroot:
+    container_name: traceroot
+    build: .
+    ports: ["3000:3000"]
+    environment:
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in your shell or .env}
+      DATABASE_URL: file:/app/data/traceroot.db
+      NODE_ENV: production
+    volumes:
+      - traceroot-data:/app/data
+    restart: unless-stopped
+volumes:
+  traceroot-data:

@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { background: #f7f8fa; color: #1a1b26; }
+body { font-feature-settings: "cv11", "ss03"; }
+* { border-color: #e3e6eb; }
+::selection { background: #d1e8db; color: #1a1b26; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid #3b6dd4; outline-offset: 2px; border-radius: 6px; }
+
+.shimmer { background: linear-gradient(90deg, #ffffff 0%, #f0f2f5 50%, #ffffff 100%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ─── AI chat widget ────────────────────────────────────────────────────── */
+
+/* Floating bubble: gentle breathing pulse, ~2.4s loop. Stops on hover. */
+@keyframes chat-bubble-breathe {
+  0%, 100% { transform: scale(1); box-shadow: 0 8px 32px -8px rgba(139,92,246,0.45); }
+  50%      { transform: scale(1.04); box-shadow: 0 14px 44px -8px rgba(139,92,246,0.65); }
+}
+.chat-bubble-breathing { animation: chat-bubble-breathe 2.4s ease-in-out infinite; }
+.chat-bubble-breathing:hover { animation-play-state: paused; }
+
+/* Panel slide-in. */
+@keyframes chat-pop-in {
+  0%   { opacity: 0; transform: translateY(18px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0)   scale(1); }
+}
+.chat-panel { animation: chat-pop-in 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Streaming dots. */
+@keyframes dot-pulse {
+  0%, 80%, 100% { opacity: 0.25; transform: scale(0.85); }
+  40%           { opacity: 1;    transform: scale(1); }
+}
+.chat-dot { animation: dot-pulse 1.4s ease-in-out infinite; }
+
+/* Drop-in message animation. */
+@keyframes chat-msg-in {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.chat-msg > div { animation: chat-msg-in 220ms ease-out; }
+
+/* Smooth scrollbars for chat body. */
+.chat-panel *::-webkit-scrollbar { width: 6px; height: 6px; }
+.chat-panel *::-webkit-scrollbar-track { background: transparent; }
+.chat-panel *::-webkit-scrollbar-thumb { background: #c4b5fd; border-radius: 3px; }
+.chat-panel *::-webkit-scrollbar-thumb:hover { background: #a78bfa; }
+
+/* Ambient page background — subtle green tint. */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 88% -8%,  rgba(45, 134, 89, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 4% 110%,  rgba(59, 109, 212, 0.04) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 92% 100%, rgba(45, 134, 89, 0.03) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Headings get a tiny gradient when in the dashboard. */
+.heading-gradient {
+  background: linear-gradient(96deg, #1a1b26 0%, #2d8659 60%, #3b6dd4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Card hover lift used by repo cards / insight cards. */
+.hover-lift {
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -16px rgba(45, 134, 89, 0.25);
+  border-color: rgba(45, 134, 89, 0.30);
+}
+
+/* Subtle internal shimmer for the empty-state placeholders. */
+@keyframes pulse-opacity { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+.pulse-soft { animation: pulse-opacity 1.6s ease-in-out infinite; }
+
+/* Section divider for dashboard sections. */
+.section-divider {
+  border-top: 1px solid #e3e6eb;
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+}
